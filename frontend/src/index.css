@@ -1,0 +1,15 @@
+@import "tailwindcss";
+
+@theme {
+  --color-kormek-bg: #25274d;
+  --color-kormek-surface: #464866;
+  --color-kormek-text: #aaabb8;
+  --color-kormek-primary: #2e9cca;
+  --color-kormek-secondary: #29648a;
+}
+
+body {
+  @apply bg-kormek-bg text-kormek-text font-sans antialiased;
+  margin: 0;
+  min-height: 100vh;
+}
