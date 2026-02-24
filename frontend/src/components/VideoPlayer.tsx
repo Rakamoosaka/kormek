@@ -71,14 +71,19 @@ export default function VideoPlayer() {
 
   if (!mediaUrl) {
     return (
-      <div className="flex items-center justify-center h-full text-kormek-text/50 select-none">
-        No media loaded
+      <div className="flex items-center justify-center h-full bg-black/5 rounded-xl select-none">
+        <div className="text-center">
+          <p className="font-display text-3xl text-black/20">NO MEDIA</p>
+          <p className="text-sm text-black/30 mt-1 font-serif italic">
+            No video loaded for this room
+          </p>
+        </div>
       </div>
     );
   }
 
   return (
-    <div className="w-full h-full rounded-lg overflow-hidden bg-black">
+    <div className="w-full h-full rounded-xl overflow-hidden bg-black shadow-lg">
       <ReactPlayer
         ref={playerRef}
         src={mediaUrl}

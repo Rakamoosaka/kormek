@@ -132,16 +132,42 @@ npm install
 
 ## How to run
 
-Open separate terminals.
-
-### 1) Start PostgreSQL (Docker)
+### Recommended: one command (Docker runs everything)
 
 ```bash
 cd Kormek
-docker compose up -d
+docker compose up --build
 ```
 
-### 2) Start backend
+- Frontend: `http://localhost:5173`
+- Backend docs: `http://localhost:8000/docs`
+
+### Stop all services
+
+```bash
+cd Kormek
+docker compose down
+```
+
+### Full reset (including DB data)
+
+```bash
+cd Kormek
+docker compose down -v
+```
+
+### Manual mode (without full Docker stack)
+
+Open separate terminals.
+
+#### 1) Start PostgreSQL (Docker)
+
+```bash
+cd Kormek
+docker compose up -d db
+```
+
+#### 2) Start backend
 
 ```bash
 cd backend
@@ -150,7 +176,7 @@ uv run uvicorn app.main:app --host 0.0.0.0 --port 8000
 
 Backend docs: `http://localhost:8000/docs`
 
-### 3) Start frontend
+#### 3) Start frontend
 
 ```bash
 cd frontend
@@ -163,7 +189,7 @@ Frontend: `http://localhost:5173`
 
 ## How to stop
 
-### Stop frontend/backend dev servers
+### Manual mode: stop frontend/backend dev servers
 
 - In each running terminal, press `Ctrl + C`
 

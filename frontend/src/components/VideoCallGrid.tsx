@@ -27,7 +27,7 @@ function VideoTile({
   return (
     <div
       className={`relative rounded-lg overflow-hidden bg-black ${
-        highlight ? "ring-2 ring-kormek-primary" : ""
+        highlight ? "ring-2 ring-green" : ""
       }`}
     >
       <video
@@ -37,7 +37,7 @@ function VideoTile({
         muted={label === "You"}
         className="w-full h-full object-cover"
       />
-      <span className="absolute bottom-1 left-2 text-[11px] text-white/80 bg-black/50 rounded px-1.5 py-0.5">
+      <span className="absolute bottom-1 left-2 text-[11px] text-white/80 bg-black/50 rounded px-1.5 py-0.5 font-medium">
         {label}
       </span>
     </div>
@@ -78,7 +78,7 @@ export default function VideoCallGrid() {
   if (!meetingStarted) {
     if (!isHost) {
       return (
-        <div className="flex items-center justify-center h-full p-4 text-xs text-kormek-text/55">
+        <div className="flex items-center justify-center h-full p-4 text-xs text-black/40 font-serif italic">
           Waiting for host to start meeting…
         </div>
       );
@@ -88,10 +88,10 @@ export default function VideoCallGrid() {
       <div className="flex items-center justify-center h-full p-4">
         <button
           onClick={handlePrimaryStart}
-          className="flex items-center gap-2 rounded-lg bg-kormek-primary hover:bg-kormek-secondary text-white text-sm font-medium px-4 py-2 transition-colors cursor-pointer"
+          className="flex items-center gap-2 border-2 border-green text-green hover:bg-green hover:text-white text-sm font-display tracking-wider px-5 py-2.5 transition-colors cursor-pointer"
         >
           <Phone className="h-4 w-4" />
-          Start Meeting
+          START MEETING
         </button>
       </div>
     );
@@ -102,10 +102,10 @@ export default function VideoCallGrid() {
       <div className="flex items-center justify-center h-full p-4">
         <button
           onClick={handlePrimaryStart}
-          className="flex items-center gap-2 rounded-lg bg-kormek-primary hover:bg-kormek-secondary text-white text-sm font-medium px-4 py-2 transition-colors cursor-pointer"
+          className="flex items-center gap-2 border-2 border-green text-green hover:bg-green hover:text-white text-sm font-display tracking-wider px-5 py-2.5 transition-colors cursor-pointer"
         >
           <Phone className="h-4 w-4" />
-          Join Meeting
+          JOIN MEETING
         </button>
       </div>
     );
@@ -141,18 +141,18 @@ export default function VideoCallGrid() {
       </div>
 
       {/* Controls */}
-      <div className="flex items-center justify-center gap-3 py-3 border-t border-kormek-bg/40">
+      <div className="flex items-center justify-center gap-3 py-3 border-t border-black/10">
         <button
           onClick={toggleAudio}
           className={`rounded-full p-2.5 transition-colors cursor-pointer ${
             audioEnabled
-              ? "bg-kormek-surface hover:bg-kormek-secondary"
-              : "bg-red-500/80 hover:bg-red-600"
+              ? "bg-ivory hover:bg-green/20 text-black"
+              : "bg-amaranth/80 hover:bg-amaranth"
           }`}
           title={audioEnabled ? "Mute mic" : "Unmute mic"}
         >
           {audioEnabled ? (
-            <Mic className="h-4 w-4 text-white" />
+            <Mic className="h-4 w-4" />
           ) : (
             <MicOff className="h-4 w-4 text-white" />
           )}
@@ -162,13 +162,13 @@ export default function VideoCallGrid() {
           onClick={toggleVideo}
           className={`rounded-full p-2.5 transition-colors cursor-pointer ${
             videoEnabled
-              ? "bg-kormek-surface hover:bg-kormek-secondary"
-              : "bg-red-500/80 hover:bg-red-600"
+              ? "bg-ivory hover:bg-green/20 text-black"
+              : "bg-amaranth/80 hover:bg-amaranth"
           }`}
           title={videoEnabled ? "Turn off camera" : "Turn on camera"}
         >
           {videoEnabled ? (
-            <Video className="h-4 w-4 text-white" />
+            <Video className="h-4 w-4" />
           ) : (
             <VideoOff className="h-4 w-4 text-white" />
           )}
@@ -176,7 +176,7 @@ export default function VideoCallGrid() {
 
         <button
           onClick={handleEnd}
-          className="rounded-full bg-red-500 hover:bg-red-600 p-2.5 transition-colors cursor-pointer"
+          className="rounded-full bg-amaranth hover:bg-amaranth/80 p-2.5 transition-colors cursor-pointer"
           title="End call"
         >
           <PhoneOff className="h-4 w-4 text-white" />

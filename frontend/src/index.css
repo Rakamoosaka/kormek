@@ -1,15 +1,55 @@
 @import "tailwindcss";
 
 @theme {
-  --color-kormek-bg: #25274d;
-  --color-kormek-surface: #464866;
-  --color-kormek-text: #aaabb8;
-  --color-kormek-primary: #2e9cca;
-  --color-kormek-secondary: #29648a;
+  /* ── Color palette ────────────────────────────────── */
+  --color-eggshell: #f1eada;
+  --color-green: #10935b;
+  --color-amaranth: #df4359;
+  --color-ivory: #e1d4b8;
+  --color-black: #101010;
+
+  /* ── Font families ────────────────────────────────── */
+  --font-display: "Bebas Neue", "Arial Narrow", sans-serif;
+  --font-body: "Inter", system-ui, sans-serif;
+  --font-serif: "Georgia", "Times New Roman", serif;
 }
 
+/* ── Base resets & defaults ──────────────────────────── */
 body {
-  @apply bg-kormek-bg text-kormek-text font-sans antialiased;
+  font-family: var(--font-body);
+  background-color: var(--color-eggshell);
+  color: var(--color-black);
   margin: 0;
   min-height: 100vh;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* ── Utility classes ─────────────────────────────────── */
+.font-display {
+  font-family: var(--font-display);
+}
+.font-serif {
+  font-family: var(--font-serif);
+}
+
+/* ── Scrollbar styling (subtle) ──────────────────────── */
+::-webkit-scrollbar {
+  width: 6px;
+}
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+::-webkit-scrollbar-thumb {
+  background: var(--color-ivory);
+  border-radius: 3px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: #c4b89a;
+}
+
+/* ── Selection ───────────────────────────────────────── */
+::selection {
+  background-color: var(--color-green);
+  color: white;
 }

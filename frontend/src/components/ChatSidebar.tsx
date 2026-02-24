@@ -1,4 +1,4 @@
-import { FormEvent, useEffect, useRef, useState } from "react";
+import { type FormEvent, useEffect, useRef, useState } from "react";
 import { Send } from "lucide-react";
 import { useRoomStore } from "../store/useRoomStore";
 
@@ -25,16 +25,16 @@ export default function ChatSidebar() {
   return (
     <div className="flex flex-col h-full">
       {/* Header */}
-      <div className="px-4 py-3 border-b border-kormek-bg/40">
-        <h2 className="text-sm font-semibold tracking-wide uppercase text-kormek-text/60">
+      <div className="px-5 py-3 border-b border-black/10">
+        <h2 className="text-xs font-medium tracking-widest uppercase text-black/40">
           Chat
         </h2>
       </div>
 
       {/* Messages */}
-      <div className="flex-1 overflow-y-auto px-4 py-3 space-y-3">
+      <div className="flex-1 overflow-y-auto px-5 py-4 space-y-3">
         {messages.length === 0 && (
-          <p className="text-center text-kormek-text/30 text-xs mt-8 select-none">
+          <p className="text-center text-black/25 text-xs mt-8 select-none font-serif italic">
             No messages yet
           </p>
         )}
@@ -45,14 +45,14 @@ export default function ChatSidebar() {
               key={i}
               className={`flex flex-col ${isSelf ? "items-end" : "items-start"}`}
             >
-              <span className="text-[11px] text-kormek-text/40 mb-0.5">
+              <span className="text-[11px] text-black/35 mb-0.5 font-medium">
                 {isSelf ? "You" : msg.sender}
               </span>
               <div
-                className={`max-w-[85%] rounded-lg px-3 py-1.5 text-sm break-words ${
+                className={`max-w-[85%] rounded-lg px-3 py-2 text-sm wrap-break-word ${
                   isSelf
-                    ? "bg-kormek-primary/20 text-kormek-text"
-                    : "bg-kormek-bg text-kormek-text"
+                    ? "bg-green/15 text-black"
+                    : "bg-eggshell text-black"
                 }`}
               >
                 {msg.text}
@@ -66,17 +66,17 @@ export default function ChatSidebar() {
       {/* Input */}
       <form
         onSubmit={handleSubmit}
-        className="px-3 py-3 border-t border-kormek-bg/40 flex gap-2"
+        className="px-4 py-3 border-t border-black/10 flex gap-2"
       >
         <input
           value={draft}
           onChange={(e) => setDraft(e.target.value)}
           placeholder="Type a message…"
-          className="flex-1 rounded-lg bg-kormek-bg px-3 py-2 text-sm text-kormek-text placeholder:text-kormek-text/40 outline-none focus:ring-2 focus:ring-kormek-primary/50"
+          className="flex-1 rounded-lg bg-eggshell px-4 py-2.5 text-sm text-black placeholder:text-black/30 outline-none focus:ring-2 focus:ring-green/30 transition-shadow"
         />
         <button
           type="submit"
-          className="rounded-lg bg-kormek-primary hover:bg-kormek-secondary p-2 transition-colors cursor-pointer"
+          className="rounded-lg bg-green hover:bg-green/80 p-2.5 transition-colors cursor-pointer"
         >
           <Send className="h-4 w-4 text-white" />
         </button>
