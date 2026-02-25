@@ -6,13 +6,8 @@ ENV PYTHONDONTWRITEBYTECODE=1
 ENV PYTHONUNBUFFERED=1
 
 RUN pip install --no-cache-dir --upgrade pip
-RUN pip install --no-cache-dir \
-    "fastapi[standard]>=0.131.0" \
-    "psycopg2-binary>=2.9.11" \
-    "pydantic-settings>=2.13.1" \
-    "python-dotenv>=1.2.1" \
-    "sqlmodel>=0.0.37" \
-    "uvicorn>=0.41.0"
+COPY pyproject.toml ./pyproject.toml
+RUN python -c "import tomllib,subprocess,pathlib; p=pathlib.Path('pyproject.toml'); deps=tomllib.loads(p.read_text(encoding='utf-8'))['project']['dependencies']; subprocess.check_call(['pip','install','--no-cache-dir',*deps])"
 
 COPY app ./app
 

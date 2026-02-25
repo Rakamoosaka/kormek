@@ -3,7 +3,7 @@ from contextlib import asynccontextmanager
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
-from app.api import rooms, ws
+from app.api import rooms, ws, youtube
 from app.core.config import settings
 from app.core.database import create_db_and_tables
 
@@ -28,6 +28,7 @@ app.add_middleware(
 
 # REST routes
 app.include_router(rooms.router, prefix="/api")
+app.include_router(youtube.router, prefix="/api")
 
 # WebSocket route
 app.include_router(ws.router)

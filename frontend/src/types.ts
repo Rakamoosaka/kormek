@@ -20,6 +20,7 @@ export type WSMessage =
   | SignalMessage
   | PeerEvent
   | MeetingMessage
+  | MediaChangeMessage
   | InitMessage;
 
 export interface InitMessage {
@@ -58,4 +59,20 @@ export interface MeetingMessage {
   type: "MEETING";
   action: "START" | "END";
   sender?: string;
+}
+
+export interface MediaChangeMessage {
+  type: "MEDIA_CHANGE";
+  mediaUrl: string;
+  sender?: string;
+}
+
+/** YouTube search result from the backend */
+export interface YouTubeResult {
+  video_id: string;
+  title: string;
+  channel: string;
+  duration: number;
+  thumbnail: string;
+  url: string;
 }

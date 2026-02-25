@@ -160,6 +160,14 @@ export const useRoomStore = create<RoomStore>()((set, get) => ({
           set({ meetingStarted: msg.action === "START" });
           break;
 
+        case "MEDIA_CHANGE":
+          set({
+            mediaUrl: msg.mediaUrl,
+            isPlaying: false,
+            currentTime: 0,
+          });
+          break;
+
         case "INIT":
           set({
             peers: msg.peers,

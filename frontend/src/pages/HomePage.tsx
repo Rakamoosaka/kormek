@@ -1,20 +1,26 @@
 import { type FormEvent, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { createRoom } from "../hooks/api";
+import ShareModal from "../components/ShareModal";
 
 export default function HomePage() {
   const navigate = useNavigate();
   const [roomName, setRoomName] = useState("");
-  const [mediaUrl, setMediaUrl] = useState("");
   const [joinCode, setJoinCode] = useState("");
   const [username, setUsername] = useState("");
+  const [createdRoomId, setCreatedRoomId] = useState<string | null>(null);
 
   const handleCreate = async (e: FormEvent) => {
     e.preventDefault();
     if (!roomName.trim() || !username.trim()) return;
-    const room = await createRoom(roomName, mediaUrl || undefined);
+    const room = await createRoom(roomName);
+    setCreatedRoomId(room.id);
+  };
+
+  const handleShareClose = () => {
+    if (!createdRoomId) return;
     navigate(
-      `/room/${room.id}?username=${encodeURIComponent(username)}&host=1`,
+      `/room/${createdRoomId}?username=${encodeURIComponent(username)}&host=1`,
     );
   };
 
@@ -26,6 +32,10 @@ export default function HomePage() {
 
   return (
     <div className="min-h-screen flex flex-col">
+      {/* Share modal after room creation */}
+      {createdRoomId && (
+        <ShareModal roomId={createdRoomId} onClose={handleShareClose} />
+      )}
       {/* ── Hero Section ─────────────────────────────── */}
       <header className="px-6 pt-12 pb-8 md:px-12 lg:px-20">
         {/* Top bar */}
@@ -72,7 +82,8 @@ export default function HomePage() {
               New Session
             </span>
             <h2 className="font-display text-[clamp(2.5rem,6vw,5rem)] leading-[0.9] text-white mt-2">
-              CREATE<br />A ROOM
+              CREATE
+              <br />A ROOM
             </h2>
           </div>
 
@@ -85,17 +96,6 @@ export default function HomePage() {
                 value={roomName}
                 onChange={(e) => setRoomName(e.target.value)}
                 placeholder="Friday movie night"
-                className="w-full bg-transparent border-b-2 border-white/30 px-0 py-3 text-white text-lg placeholder:text-white/40 outline-none focus:border-white transition-colors"
-              />
-            </div>
-            <div>
-              <label className="block text-xs font-medium tracking-widest uppercase text-white/60 mb-2">
-                Media URL
-              </label>
-              <input
-                value={mediaUrl}
-                onChange={(e) => setMediaUrl(e.target.value)}
-                placeholder="YouTube URL or leave empty"
                 className="w-full bg-transparent border-b-2 border-white/30 px-0 py-3 text-white text-lg placeholder:text-white/40 outline-none focus:border-white transition-colors"
               />
             </div>
@@ -118,7 +118,8 @@ export default function HomePage() {
               Existing Session
             </span>
             <h2 className="font-display text-[clamp(2.5rem,6vw,5rem)] leading-[0.9] text-white mt-2">
-              JOIN<br />A ROOM
+              JOIN
+              <br />A ROOM
             </h2>
           </div>
 

@@ -25,6 +25,7 @@ CHAT = "CHAT"
 SYNC = "SYNC"
 SIGNAL = "SIGNAL"
 MEETING = "MEETING"
+MEDIA_CHANGE = "MEDIA_CHANGE"
 
 
 @dataclass
@@ -137,6 +138,11 @@ class ConnectionManager:
                         self._meeting_active[room_id] = True
                     elif msg.get("action") == "END":
                         self._meeting_active[room_id] = False
+                    await self.broadcast(room_id, msg)
+
+                elif msg_type == MEDIA_CHANGE:
+                    # Host changed the video; broadcast to all peers
+                    msg["sender"] = username
                     await self.broadcast(room_id, msg)
 
                 else:
