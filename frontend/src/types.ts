@@ -19,7 +19,15 @@ export type WSMessage =
   | SyncMessage
   | SignalMessage
   | PeerEvent
-  | MeetingMessage;
+  | MeetingMessage
+  | InitMessage;
+
+export interface InitMessage {
+  type: "INIT";
+  peers: string[];
+  meetingStarted: boolean;
+  chatHistory: ChatMessage[];
+}
 
 export interface ChatMessage {
   type: "CHAT";

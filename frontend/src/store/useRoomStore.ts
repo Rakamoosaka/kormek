@@ -159,6 +159,14 @@ export const useRoomStore = create<RoomStore>()((set, get) => ({
         case "MEETING":
           set({ meetingStarted: msg.action === "START" });
           break;
+
+        case "INIT":
+          set({
+            peers: msg.peers,
+            meetingStarted: msg.meetingStarted,
+            messages: msg.chatHistory || [],
+          });
+          break;
       }
     };
 

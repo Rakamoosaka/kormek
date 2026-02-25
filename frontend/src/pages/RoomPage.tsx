@@ -60,7 +60,7 @@ export default function RoomPage() {
         </div>
         <span className="text-xs font-medium tracking-widest uppercase text-black/40 flex items-center gap-2">
           <span className="inline-block w-2 h-2 rounded-full bg-green" />
-          {peers.length + 1} online
+          {peers.length} online
         </span>
       </header>
 

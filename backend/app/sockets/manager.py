@@ -40,6 +40,10 @@ class ConnectionManager:
     def __init__(self) -> None:
         # room_id → {username: Peer}
         self._rooms: dict[str, dict[str, Peer]] = {}
+        # room_id → whether a meeting is active
+        self._meeting_active: dict[str, bool] = {}
+        # room_id → list of chat message dicts
+        self._chat_history: dict[str, list[dict]] = {}
 
     # ------------------------------------------------------------------
     # Connection lifecycle
@@ -56,6 +60,8 @@ class ConnectionManager:
             room.pop(username, None)
             if not room:
                 del self._rooms[room_id]
+                self._meeting_active.pop(room_id, None)
+                self._chat_history.pop(room_id, None)
         logger.info("WS disconnect: %s left room %s", username, room_id)
 
     def get_peers(self, room_id: str) -> list[str]:
@@ -83,6 +89,19 @@ class ConnectionManager:
         if peer:
             await self._send_json(peer.ws, data)
 
+    async def send_init(self, room_id: str, username: str) -> None:
+        """Send initial room state (peers, meeting, chat history) to a newly connected user."""
+        peer = self._rooms.get(room_id, {}).get(username)
+        if not peer:
+            return
+        init_data = {
+            "type": "INIT",
+            "peers": self.get_peers(room_id),
+            "meetingStarted": self._meeting_active.get(room_id, False),
+            "chatHistory": self._chat_history.get(room_id, []),
+        }
+        await self._send_json(peer.ws, init_data)
+
     # ------------------------------------------------------------------
     # Main dispatch loop — called once per connected client
     # ------------------------------------------------------------------
@@ -97,6 +116,7 @@ class ConnectionManager:
                 if msg_type == CHAT:
                     # Attach sender, then broadcast to room (including sender for echo)
                     msg["sender"] = username
+                    self._chat_history.setdefault(room_id, []).append(msg.copy())
                     await self.broadcast(room_id, msg)
 
                 elif msg_type == SYNC:
@@ -113,6 +133,10 @@ class ConnectionManager:
                 elif msg_type == MEETING:
                     # Host controls meeting lifecycle; reflect to everyone.
                     msg["sender"] = username
+                    if msg.get("action") == "START":
+                        self._meeting_active[room_id] = True
+                    elif msg.get("action") == "END":
+                        self._meeting_active[room_id] = False
                     await self.broadcast(room_id, msg)
 
                 else:

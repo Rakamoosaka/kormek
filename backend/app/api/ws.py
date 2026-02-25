@@ -9,6 +9,9 @@ router = APIRouter()
 async def ws_endpoint(websocket: WebSocket, room_id: str, username: str):
     await manager.connect(room_id, username, websocket)
 
+    # Send initial state (peers, meeting status, chat history) to the new user
+    await manager.send_init(room_id, username)
+
     # Notify the room about the new peer
     await manager.broadcast(
         room_id,

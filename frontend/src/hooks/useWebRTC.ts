@@ -32,6 +32,9 @@ export function useWebRTC() {
   const [audioEnabled, setAudioEnabled] = useState(true);
   const [videoEnabled, setVideoEnabled] = useState(true);
 
+  // Ref mirrors localStream state to avoid stale closures in callbacks
+  const localStreamRef = useRef<MediaStream | null>(null);
+
   // Map<peerUsername, RTCPeerConnection>
   const pcsRef = useRef<Map<string, RTCPeerConnection>>(new Map());
 
@@ -199,6 +202,7 @@ export function useWebRTC() {
         video: true,
         audio: true,
       });
+      localStreamRef.current = stream;
       setLocalStream(stream);
       setCallActive(true);
     } catch (err) {
@@ -212,34 +216,41 @@ export function useWebRTC() {
       closePeer(name);
     }
     // Stop local tracks
-    localStream?.getTracks().forEach((t) => t.stop());
+    localStreamRef.current?.getTracks().forEach((t) => t.stop());
+    localStreamRef.current = null;
     setLocalStream(null);
     setRemoteStreams([]);
     setCallActive(false);
-  }, [localStream, closePeer]);
+  }, [closePeer]);
 
   const toggleAudio = useCallback(() => {
-    localStream?.getAudioTracks().forEach((t) => {
-      t.enabled = !t.enabled;
+    const stream = localStreamRef.current;
+    if (!stream) return;
+    const newEnabled = !stream.getAudioTracks()[0]?.enabled;
+    stream.getAudioTracks().forEach((t) => {
+      t.enabled = newEnabled;
     });
-    setAudioEnabled((prev) => !prev);
-  }, [localStream]);
+    setAudioEnabled(newEnabled);
+  }, []);
 
   const toggleVideo = useCallback(() => {
-    localStream?.getVideoTracks().forEach((t) => {
-      t.enabled = !t.enabled;
+    const stream = localStreamRef.current;
+    if (!stream) return;
+    const newEnabled = !stream.getVideoTracks()[0]?.enabled;
+    stream.getVideoTracks().forEach((t) => {
+      t.enabled = newEnabled;
     });
-    setVideoEnabled((prev) => !prev);
-  }, [localStream]);
+    setVideoEnabled(newEnabled);
+  }, []);
 
   /* ---------- Cleanup on unmount ---------- */
   useEffect(() => {
     return () => {
       for (const [, pc] of pcsRef.current) pc.close();
       pcsRef.current.clear();
-      localStream?.getTracks().forEach((t) => t.stop());
+      localStreamRef.current?.getTracks().forEach((t) => t.stop());
+      localStreamRef.current = null;
     };
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   return {
