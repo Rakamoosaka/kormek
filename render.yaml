@@ -1,3 +1,9 @@
+# Frontend is deployed separately on Vercel.
+# This file provisions only the backend API + Postgres.
+#
+# Set CORS_ORIGINS to your Vercel deployment URL (e.g. https://kormek.vercel.app)
+# after the first Vercel deploy, then redeploy the backend.
+
 services:
   - type: web
     name: kormek-backend
@@ -12,23 +18,12 @@ services:
       - key: APP_NAME
         value: Kormek
       - key: CORS_ORIGINS
-        value: https://kormek-frontend.onrender.com
+        # Update this to your Vercel frontend URL after first deploy
+        value: https://kormek.vercel.app
       - key: DATABASE_URL
         fromDatabase:
           name: kormek-db
           property: connectionString
-
-  - type: web
-    name: kormek-frontend
-    env: static
-    rootDir: frontend
-    buildCommand: npm ci && npm run build
-    staticPublishPath: dist
-    envVars:
-      - key: VITE_API_BASE_URL
-        value: https://kormek-backend.onrender.com/api
-      - key: VITE_WS_BASE_URL
-        value: wss://kormek-backend.onrender.com
 
 databases:
   - name: kormek-db
