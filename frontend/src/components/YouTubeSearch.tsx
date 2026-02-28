@@ -15,6 +15,7 @@ export default function YouTubeSearch() {
   const [results, setResults] = useState<YouTubeResult[]>([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [searched, setSearched] = useState(false);
 
   const room = useRoomStore((s) => s.room);
   const isHost = useRoomStore((s) => s.isHost);
@@ -29,9 +30,11 @@ export default function YouTubeSearch() {
 
     setLoading(true);
     setError(null);
+    setSearched(false);
     try {
       const data = await searchYouTube(query);
       setResults(data);
+      setSearched(true);
     } catch {
       setError("Search failed. Try again.");
     } finally {
@@ -79,6 +82,12 @@ export default function YouTubeSearch() {
       </form>
 
       {error && <p className="text-xs text-amaranth">{error}</p>}
+
+      {searched && !loading && !error && results.length === 0 && (
+        <p className="text-xs text-black/60">
+          No results found right now. Try another query.
+        </p>
+      )}
 
       {/* Results */}
       {results.length > 0 && (

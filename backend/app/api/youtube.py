@@ -4,7 +4,7 @@ from __future__ import annotations
 
 import logging
 
-from fastapi import APIRouter, HTTPException, Query
+from fastapi import APIRouter, Query
 from pydantic import BaseModel
 from pytubefix import Search
 
@@ -33,13 +33,15 @@ def search_youtube(
         results: list[VideoResult] = []
 
         for video in search.videos[:limit]:
+            if not (video.video_id and video.title and video.watch_url):
+                continue
             results.append(
                 VideoResult(
                     video_id=video.video_id,
                     title=video.title,
-                    channel=video.author,
-                    duration=video.length,
-                    thumbnail=video.thumbnail_url,
+                    channel=video.author or "Unknown",
+                    duration=video.length or 0,
+                    thumbnail=video.thumbnail_url or "",
                     url=video.watch_url,
                 )
             )
@@ -47,4 +49,4 @@ def search_youtube(
 
     except Exception as exc:
         logger.exception("YouTube search failed for query=%s", q)
-        raise HTTPException(status_code=502, detail="YouTube search unavailable") from exc
+        return []
