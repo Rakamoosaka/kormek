@@ -1,8 +1,20 @@
-const API_BASE_URL =
-  (import.meta.env.VITE_API_BASE_URL as string | undefined)?.replace(
-    /\/$/,
-    "",
-  ) || "/api";
+const API_BASE_URL = (() => {
+  const raw = (import.meta.env.VITE_API_BASE_URL as string | undefined)?.trim();
+  if (!raw) return "/api";
+
+  const normalized = raw.replace(/\/$/, "");
+
+  try {
+    const parsed = new URL(normalized);
+    if (parsed.pathname === "" || parsed.pathname === "/") {
+      return `${normalized}/api`;
+    }
+  } catch {
+    return normalized;
+  }
+
+  return normalized;
+})();
 
 export async function createRoom(name: string, mediaUrl?: string) {
   const res = await fetch(`${API_BASE_URL}/rooms/`, {

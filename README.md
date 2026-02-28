@@ -334,20 +334,29 @@ Otherwise frontend requests will not know where to reach backend services.
 
 ## Deployment
 
-### Recommended first deployment
+### Recommended (free split deployment)
 
-- Deploy backend + managed Postgres + static frontend on Render.
-- A starter `render.yaml` is included at project root.
+- Frontend: Vercel (from `frontend/`)
+- Backend: Render web service (from root `render.yaml`)
+- Database: free external Postgres (Neon or Supabase)
 
-### Render quick steps
+### Quick steps
 
-1. Push repository to GitHub
-2. In Render, create Blueprint and point to this repo
-3. Review generated services from `render.yaml`
-4. After deploy, update backend `CORS_ORIGINS` with actual frontend URL if needed
-5. Confirm:
-   - Backend health: `/healthz`
-   - Frontend room creation and websocket connection
+1. Create a free Postgres database on Neon/Supabase and copy its connection string.
+2. Push repository to GitHub.
+3. Deploy backend on Render via Blueprint (`render.yaml`).
+4. During Blueprint setup, provide `DATABASE_URL` when prompted.
+5. Deploy frontend on Vercel with root directory set to `frontend`.
+6. In Vercel env vars, set:
+
+- `VITE_API_BASE_URL=https://<your-render-backend>.onrender.com/api`
+- `VITE_WS_BASE_URL=wss://<your-render-backend>.onrender.com`
+
+7. Set backend `CORS_ORIGINS` to your actual Vercel domain and redeploy backend.
+8. Confirm:
+
+- Backend health: `/healthz`
+- Room creation, join, chat, and websocket connection
 
 ---
 

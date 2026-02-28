@@ -108,9 +108,15 @@ export const useRoomStore = create<RoomStore>()((set, get) => ({
 
   // ---------- WebSocket ----------
   connect: (roomId, username) => {
-    const wsBase = (
+    let wsBase = (
       import.meta.env.VITE_WS_BASE_URL as string | undefined
     )?.replace(/\/$/, "");
+    if (wsBase?.startsWith("https://")) {
+      wsBase = wsBase.replace("https://", "wss://");
+    } else if (wsBase?.startsWith("http://")) {
+      wsBase = wsBase.replace("http://", "ws://");
+    }
+
     const protocol = window.location.protocol === "https:" ? "wss" : "ws";
     const wsUrl = wsBase
       ? `${wsBase}/ws/${roomId}/${encodeURIComponent(username)}`
